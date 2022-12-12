@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+            <ui:define name="content">       
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Deals</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Deals</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+
+                    <h:form style="padding-bottom: 15px">
+                        <h:commandLink value="Back" class="btn btn-danger" action="#{dealMB.backView()}"/>
+                    </h:form>
+                    <h:form id="dealForm">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">#{dealMB.formTitle}</h2>
+                            </header>
+                            <div class="panel-body formCateHeight">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">ID</label>
+                                            <h:inputText id="dealID" value="#{dealMB.deal.dealID}" class="form-control" readonly="true"/>
+                                            <h:message for="dealID" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Product Name</label>
+                                            <h:inputText id="dealName" value="#{dealMB.deal.productID.productName}" class="form-control" readonly="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Date</label>
+                                            <div class="input-daterange input-group" style="width: 100%;">
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                                <h:inputText id="start" value="#{dealMB.dealStart}" class="form-control" required="true"/>
+                                                <span class="input-group-addon">to</span>
+                                                <h:inputText id="end" value="#{dealMB.dealEnd}" class="form-control" required="true"/>
+                                            </div>
+                                            <h:message for="start" id="start_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Discount</label>
+                                            <h:inputText id="dealDiscount" value="#{dealMB.deal.dealDiscount}" class="form-control" required="true"/>
+                                            <h:message for="dealDiscount" id="dealDiscount_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="panel-footer">
+                                <h:commandLink value="Save" type="submit" class="btn btn-primary" action="#{dealMB.saveDeal()}">
+                                    <f:ajax execute="@form" render="dealName_m dealDiscount_m start_m end_m" />
+                                </h:commandLink>
+                            </footer>
+                        </section>
+                    </h:form>
+                </section>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>

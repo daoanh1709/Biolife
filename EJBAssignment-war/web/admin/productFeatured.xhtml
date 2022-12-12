@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+            <ui:define name="content">
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Products</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Products</span></li>
+                                <li><span>Featured Products</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+                    <h:panelGroup class="col-xl-6 col-lg-6">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">
+                                    Featured Products
+                                </h2>
+                            </header>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <h:dataTable id="datatable-default" value="#{productMB.showFeaturedProduct()}" var="itemFP" class="table table-bordered table-striped mb-none">
+                                        <h:column>
+                                            <f:facet name="header">#</f:facet>
+                                            <h:outputText value="#{itemFP.productID}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Category</f:facet>
+                                            <h:outputText value="#{itemFP.categoryID.categoryName}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Name</f:facet>
+                                            <h:outputText value="#{itemFP.productName}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Image</f:facet>
+                                            <img src="../resources/#{itemFP.productImageURL}?t=#{categoriesMB.instanceDate()}" alt="biolife product" width="40" height="40"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Actions</f:facet>
+                                            <div class="btnGroup">
+                                                <h:form id="deleteBtn">
+                                                    <h:commandLink class="btn btn-danger" action="#{productMB.changeFeatured(itemFP.productID)}">
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </h:commandLink>
+                                                </h:form>
+                                            </div>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                        </section>
+                    </h:panelGroup>
+                    <h:panelGroup class="col-xl-6 col-lg-6">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">
+                                    Non-Featured Products
+                                </h2>
+                            </header>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <h:dataTable id="datatable-default1" value="#{productMB.showUnfeaturedProduct()}" var="itemNFP" class="table table-bordered table-striped mb-none">
+                                        <h:column>
+                                            <f:facet name="header">#</f:facet>
+                                            <h:outputText value="#{itemNFP.productID}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Category</f:facet>
+                                            <h:outputText value="#{itemNFP.categoryID.categoryName}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Name</f:facet>
+                                            <h:outputText value="#{itemNFP.productName}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Image</f:facet>
+                                            <img src="../resources/#{itemNFP.productImageURL}?t=#{categoriesMB.instanceDate()}" alt="biolife product" width="40" height="40"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Actions</f:facet>
+                                            <div class="btnGroup">
+                                                <h:form id="deleteBtn">
+                                                    <h:commandLink class="btn btn-success" action="#{productMB.changeFeatured(itemNFP.productID)}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </h:commandLink>
+                                                </h:form>
+                                            </div>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                        </section>
+                    </h:panelGroup>
+                </section>
+
+                <!-- Specific Page Vendor CSS -->
+                <h:outputStylesheet name="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+                <!-- Specific Page Vendor -->
+                <h:outputScript name="assets/vendor/ios7-switch/ios7-switch.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.default.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.row.with.details.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.tabletools.js" target="head"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

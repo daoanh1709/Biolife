@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./templates/biolifeTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{loginMB.checkLogin()}"/>
+    </f:metadata>
+    <ui:define name="content">
+        <!--Hero Section-->
+        <div class="hero-section hero-background">
+            <h1 class="page-title">Shopping Cart</h1>
+        </div>
+
+        <!--Navigation section-->
+        <div class="container">
+            <nav class="biolife-nav">
+                <ul>
+                    <li class="nav-item">
+                        <h:link outcome="index" class="permal-link" value="Home"/>
+                    </li>
+                    <li class="nav-item"><span class="current-page">Shopping Cart</span></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!--<h:panelGroup id="updateCart">-->
+        <div class="page-contain shopping-cart">
+            <!-- Main content -->
+            <div id="main-content" class="main-content">
+                <div class="container">
+
+                    <!--Cart Table-->
+                    <div class="shopping-cart-container">
+                        <div class="row">
+                            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                                <h3 class="box-title">Your cart items</h3>
+                                <table class="shop_table cart-form">
+                                    <thead>
+                                        <tr>
+                                            <th class="product-name">Product Name</th>
+                                            <th class="product-price">Price</th>
+                                            <th class="product-quantity">Quantity</th>
+                                            <th class="product-subtotal">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:choose>
+                                            <c:when test="#{cartProductMB.countCart() > 0}">
+                                                <c:forEach items="#{cartProductMB.showCartMB()}" var="itemCart" >
+                                                    <tr class="cart_item">
+                                                        <td class="product-thumbnail" data-title="Product Name">
+                                                            <h:link outcome="productdetails" class="prd-thumb">
+                                                                <f:param name="id" value="#{itemCart.proID}"/>
+                                                                <figure>
+                                                                    <h:graphicImage name="#{itemCart.image}" width="113" height="113" alt="shopping cart"/>
+                                                                </figure>
+                                                            </h:link>
+                                                            <h:link outcome="productdetails" class="prd-name">
+                                                                <f:param name="id" value="#{itemCart.proID}"/>
+                                                                <h:outputText value="#{itemCart.proName}"/>
+                                                            </h:link>
+                                                            <div class="action">
+                                                                <h:form id="cartForm">
+                                                                    <h:commandLink onclick="removeCart();" class="remove">
+                                                                        <f:ajax/>
+                                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                    </h:commandLink>
+                                                                    <h:commandButton action="#{cartProductMB.removeCart(itemCart.proID)}" id="btnRemoveCart" style="display: none;">
+                                                                    </h:commandButton>
+                                                                </h:form>
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-price" data-title="Price">
+                                                            <div class="price price-contain">
+                                                                <c:choose>
+                                                                    <c:when test="#{dealMB.checkProductDeal(itemCart.proID)}">
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{productMB.dealPrice(itemCart.proID)}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                        <del>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{itemCart.unitPrice}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </del>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{itemCart.unitPrice}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-quantity" data-title="Quantity">
+                                                            <div class="quantity-box type1">
+                                                                <div class="qty-input">
+                                                                    <h:form>
+                                                                        <h:inputText id="quantity#{itemCart.proID}" value="#{itemCart.quantity}" readonly="true"/>
+                                                                        <h:message for="quantity#{itemCart.proID}" class="errorMessage" id="quantity_m#{itemCart.proID}"/>
+                                                                        <h:commandLink class="qty-btn btn-up">
+                                                                            <f:ajax listener="#{cartProductMB.updateCart(itemCart.proID, true)}" render="miniQuantity#{itemCart.proID} quantity_m#{itemCart.proID} quantity#{itemCart.proID} totalAmount#{itemCart.proID} dealAmount#{itemCart.proID} total totalQuantity totalSaving miniTotalAmount miniTotalQuantity"/>
+                                                                            <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                                                        </h:commandLink>
+                                                                        <h:commandLink class="qty-btn btn-down">
+                                                                            <f:ajax listener="#{cartProductMB.updateCart(itemCart.proID, false)}" render="miniQuantity#{itemCart.proID} quantity_m#{itemCart.proID} quantity#{itemCart.proID} totalAmount#{itemCart.proID} dealAmount#{itemCart.proID} total totalQuantity totalSaving miniTotalAmount miniTotalQuantity"/>
+                                                                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                                                        </h:commandLink>
+                                                                    </h:form>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="product-subtotal" data-title="Total" style="min-width: 120px;">
+                                                            <div class="price price-contain">
+                                                                <c:choose>
+                                                                    <c:when test="#{dealMB.checkProductDeal(itemCart.proID)}">
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText id="dealAmount#{itemCart.proID}" value="#{cartProductMB.dealTotalAmount(productMB.dealPrice(itemCart.proID), itemCart.quantity)}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                        <del>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText id="totalAmount#{itemCart.proID}" value="#{itemCart.price}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </del>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText id="totalAmount#{itemCart.proID}" value="#{itemCart.price}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                        <del>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText id="dealAmount#{itemCart.proID}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </del>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr class="minicart-empty" style="border: none;">
+                                                    <td colspan="4">
+                                                        No product in your cart
+                                                    </td>
+                                                </tr>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <tr class="cart_item wrap-buttons" style="border: none;">
+                                            <td class="wrap-btn-control" colspan="4">
+                                                <h:link outcome="products" class="btn back-to-shop" style="margin-top: 10px;" value="Back to Shop">
+                                                    <f:param name="category" value="all"/>
+                                                    <f:param name="page" value="1"/>
+                                                </h:link>
+                                                <h:form id="emptyCartForm">
+                                                    <h:commandButton class="btn btn-clear" value="clear all" onclick="clearCart();">
+                                                        <f:ajax/>
+                                                    </h:commandButton>
+                                                    <h:commandButton action="#{cartProductMB.emptyCart()}" id="btnEmptyCart" style="display: none;"/>
+                                                </h:form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                <div class="shpcart-subtotal-block">
+                                    <div class="subtotal-line">
+                                        <b class="stt-name">Subtotal <span class="sub">(<h:outputText id="totalQuantity" value="#{cartProductMB.totalQuantity}"/> items)</span></b>
+                                        <span class="stt-price">
+                                            <h:outputText id="total" value="#{cartProductMB.totalDealAmount}">
+                                                <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </span>
+                                    </div>
+                                    <div class="subtotal-line">
+                                        <b class="stt-name">Saving</b>
+                                        <span class="stt-price">
+                                            <h:outputText id="totalSaving" value="#{cartProductMB.totalAmount - cartProductMB.totalDealAmount}">
+                                                <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </span>
+                                    </div>
+                                    <div class="tax-fee">
+                                        <p class="title">Est. Taxes &amp; Fees</p>
+                                        <p class="desc">Based on 56789</p>
+                                    </div>
+                                    <div class="btn-checkout">
+                                        <h:form style="margin-bottom: 0px;">
+                                            <h:commandLink action="#{cartProductMB.loadCheckOut()}" class="btn checkout" value="Check Out"/>
+                                        </h:form>
+                                    </div>
+                                    <p class="pickup-info"><b>Free Pickup</b> is available as soon as today More about shipping and pickup</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--</h:panelGroup>-->
+    </ui:define>
+
+</ui:composition>

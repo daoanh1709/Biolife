@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+
+            <ui:define name="content">
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Categories</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Orders</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+                    <h:panelGroup>
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">Orders</h2>
+                            </header>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table id="datatable-orders" class="table table-bordered table-striped mb-none">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Customer</th>
+                                                <th>Order Date</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Note</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="#{orderMB.showAllOrders()}" var="itemO">
+                                                <tr>
+                                                    <td><h:outputText value="#{itemO.orderID}"/></td>
+                                                    <td><h:outputText value="#{itemO.customerID.customerName}"/></td>
+                                                    <td>
+                                                        <h:outputText value="#{itemO.orderDate}">
+                                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                                                        </h:outputText>
+                                                    </td>
+                                                    <td>
+                                                        <h:outputText value="#{orderMB.calculateTotalAmount(itemO.orderID)}">
+                                                            <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                        </h:outputText>
+                                                    </td>
+                                                    <td><h:outputText id="#{itemO.orderID}" value="#{itemO.statusID.statusDescription}" class="tag-status tag-status-color#{itemO.statusID.statusID}"/></td>
+                                                    <td><h:outputText value="#{itemO.orderNote}"/></td>
+                                                    <td>
+                                                        <div class="btnGroup">
+                                                            <h:form id="updateStatus">
+                                                                <h:commandLink id="btn#{itemO.orderID}" class="btn btn-primary" action="#{orderMB.confirmOrder(itemO.orderID)}" disabled="#{itemO.statusID.statusID == 0 ? 'false' : 'true'}">
+                                                                    <f:ajax listener="#{orderMB.view()}" render="#{itemO.orderID} btn#{itemO.orderID}"/>
+                                                                    <i class="fa fa-check"></i>
+                                                                </h:commandLink>
+                                                            </h:form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </section>
+                    </h:panelGroup>
+                </section>
+
+                <!-- Specific Page Vendor CSS -->
+                <h:outputStylesheet name="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+                <!-- Specific Page Vendor -->
+                <h:outputScript name="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.default.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.row.with.details.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.tabletools.js" target="head"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

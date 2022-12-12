@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./templates/biolifeTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <!--Hero Section-->
+        <div class="hero-section hero-background">
+            <h1 class="page-title">Register</h1>
+        </div>
+
+        <!--Navigation section-->
+        <div class="container">
+            <nav class="biolife-nav">
+                <ul>
+                    <li class="nav-item">
+                        <h:link outcome="index" class="permal-link" value="Home"/>
+                    </li>
+                    <li class="nav-item"><span class="current-page">Register</span></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="page-contain login-page">
+
+            <!-- Main content -->
+            <div id="main-content" class="main-content">
+                <div class="container">
+
+                    <div class="row"  style="margin-top: 30px; margin-bottom: 30px; align-items: center; display: flex;">
+                        <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2">
+
+                        </div>
+                        <!--Form Sign In-->
+                        <div class="col-lg-6 col-md-8 col-sm-8 col-xs-8" style="background-color: #ffffff; border-radius: 7px;box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%)">
+                            <div class="signin-container">
+                                <h:form id="registerUser">
+                                    <h:inputHidden value="#{customerMB.customers.customerID}"/>
+                                    <h:inputHidden value="#{customerMB.customers.customerImageURL}"/>
+                                    <p class="form-row user-login">
+                                        <label for="name">Name:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputText id="name" class="txt-input" value="#{customerMB.name}"/>
+                                        <h:outputText value="#{customerMB.nameMessage}" class="errorMessage" id="name_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="gender">Gender:<span class="requite" style="color: red;">*</span></label>
+                                        <h:selectOneRadio value="#{customerMB.customers.customerGender}">
+                                            <f:selectItem itemValue="Male" itemLabel="Male"/>
+                                            <f:selectItem itemValue="Female" itemLabel="Female"/>
+                                            <f:selectItem itemValue="Other" itemLabel="Other"/>
+                                        </h:selectOneRadio>
+                                        <h:outputText value="#{customerMB.genderMessage}" class="errorMessage" id="gender_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="phone">Phone:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputText id="phone" class="txt-input" value="#{customerMB.customers.customerPhone}"/>
+                                        <h:outputText value="#{customerMB.phoneMessage}" class="errorMessage" id="phone_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="address">Address:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputTextarea id="address" class="txt-input" value="#{customerMB.address}"/>
+                                        <h:outputText value="#{customerMB.addressMessage}" class="errorMessage" id="address_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="email">Email:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputText id="email" class="txt-input" value="#{customerMB.email}"/>
+                                        <h:outputText value="#{customerMB.emailMessage}" class="errorMessage" id="email_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="password">Password:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputSecret id="password" class="txt-input" value="#{customerMB.password}" redisplay="true"/>
+                                        <h:outputText value="#{customerMB.passwordMessage}" class="errorMessage" id="password_m"/>
+                                    </p>
+                                    <p class="form-row user-login">
+                                        <label for="cfpassword">Confirm Password:<span class="requite" style="color: red;">*</span></label>
+                                        <h:inputSecret id="cfpassword" class="txt-input" value="#{customerMB.confirmPassword}" redisplay="true"/>
+                                        <h:outputText value="#{customerMB.cfPasswordMessage}" class="errorMessage" id="cfpassword_m"/>
+                                    </p>
+                                    <p class="form-row wrap-btn">
+                                        <h:commandButton class="btn btn-submit btn-bold" type="submit" action="#{customerMB.register()}" value="sign up" style="margin-top: 0px;">
+                                            <f:ajax execute="@form" render="name_m gender_m phone_m address_m email_m password_m cfpassword_m" />
+                                        </h:commandButton>
+                                        Do you already have an account?
+                                        <h:link outcome="login" class="link-to-help" style="vertical-align: unset; margin-left: 5px;" value="Sign in"/>
+                                    </p>
+                                </h:form>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-2 col-sm-2 col-xs-2">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <h:outputScript rendered="#{customerMB.showAlert}">
+            swal({
+            title: 'Successfully',
+            text: 'The information has been saved',
+            icon: 'success'
+            }).then(function () {
+            window.location = '/EJBAssignment-war/faces/login.xhtml';
+            });
+        </h:outputScript>
+    </ui:define>
+
+</ui:composition>

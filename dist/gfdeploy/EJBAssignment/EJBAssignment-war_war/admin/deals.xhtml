@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+            <ui:define name="content">
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Categories</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Deals</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+                    <h:panelGroup>
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">Deals</h2>
+                            </header>
+                            <div class="panel-body">
+                                <div class="mb-md">
+                                    <a class="mb-xs mt-xs mr-xs btn btn-success" data-toggle="modal" data-target="#modalBootstrap">
+                                        Add <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                                <div class="table-responsive">
+                                    <h:dataTable id="datatable-deal" value="#{dealMB.showAllDeals()}" var="itemD" class="table table-bordered table-striped mb-none">
+                                        <h:column>
+                                            <f:facet name="header">#</f:facet>
+                                            <h:outputText value="#{itemD.dealID}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Product Name</f:facet>
+                                            <h:outputText value="#{itemD.productID.productName}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Start</f:facet>
+                                            <h:outputText value="#{itemD.dealStart}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">End</f:facet>
+                                            <h:outputText value="#{itemD.dealEnd}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Discount</f:facet>
+                                            <h:outputText value="#{itemD.dealDiscount}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">Actions</f:facet>
+                                            <div class="btnGroup">
+                                                <h:form id="updateBtn">
+                                                    <h:commandLink class="btn btn-primary" action="#{dealMB.loadUpdateForm(itemD.dealID)}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </h:commandLink>
+                                                </h:form>
+                                                <h:form id="deleteBtn">
+                                                    <h:commandLink class="btn btn-danger" action="#{dealMB.deleteDeal(itemD.dealID)}">
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </h:commandLink>
+                                                </h:form>
+                                            </div>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                            </div>
+                        </section>
+                    </h:panelGroup>
+
+                    <div class="modal fade" id="modalBootstrap" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Choose Product</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <h:dataTable id="datatable-default1" value="#{productMB.showAllProducts()}" var="itemP" class="table table-bordered table-striped mb-none">
+                                                <h:column>
+                                                    <f:facet name="header">#</f:facet>
+                                                    <h:outputText value="#{itemP.productID}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Category</f:facet>
+                                                    <h:outputText value="#{itemP.categoryID.categoryName}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Name</f:facet>
+                                                    <h:outputText value="#{itemP.productName}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Unit Price</f:facet>
+                                                    <h:outputText value="#{itemP.unitPrice}">
+                                                        <f:convertNumber type="currency" currencySymbol="$" locale="en_US"/>
+                                                    </h:outputText>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Image</f:facet>
+                                                    <img src="../resources/#{itemP.productImageURL}?t=#{categoriesMB.instanceDate()}" alt="biolife product" width="40" height="40"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">Actions</f:facet>
+                                                    <div class="btnGroup">
+                                                        <h:form id="updateBtn">
+                                                            <h:commandLink class="btn btn-success" action="#{dealMB.loadInsertForm(itemP.productID)}">
+                                                                <i class="fa fa-location-arrow"></i>
+                                                            </h:commandLink>
+                                                        </h:form>
+                                                    </div>
+                                                </h:column>
+                                            </h:dataTable>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Specific Page Vendor CSS -->
+                <h:outputStylesheet name="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+                <!-- Specific Page Vendor -->
+                <h:outputScript name="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.default.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.row.with.details.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.tabletools.js" target="head"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

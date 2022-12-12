@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+            <ui:define name="content">       
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Products</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Products</span></li>
+                                <li><span>All Products</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+
+                    <h:form style="padding-bottom: 15px">
+                        <h:commandLink value="Back" class="btn btn-danger" action="#{productMB.backView()}"/>
+                    </h:form>
+                    <h:form id="productForm" prependId="false" enctype="multipart/form-data">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">#{productMB.formTitle}</h2>
+                            </header>
+                            <div class="panel-body formProductHeight">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">ID</label>
+                                            <h:inputText id="proID" value="#{productMB.product.productID}" class="form-control" readonly="true"/>
+                                            <h:message for="proID" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Name</label>
+                                            <h:inputText id="proName" value="#{productMB.product.productName}" class="form-control" required="true"/>
+                                            <h:message for="proName" id="proName_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Category</label>
+                                            <h:selectOneMenu class="form-control" value="#{productMB.selectedCategory}">
+                                                <f:selectItems value="#{productMB.showAllCategories()}" var="category" itemValue="#{category.categoryID}" itemLabel="#{category.categoryName}"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Unit Price</label>
+                                            <div class="input-group mb-md" style="margin-bottom: 0px">
+                                                <span class="input-group-addon">$</span>
+                                                <h:inputText id="unitPrice" value="#{productMB.product.unitPrice}" converterMessage="Must be a real number" class="form-control" required="true"/>
+                                            </div>
+                                            <h:message for="unitPrice" id="unitPrice_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Unit In Stock</label>
+                                            <h:inputText id="unitStock" value="#{productMB.product.unitInStock}" converterMessage="Must be an integer number" class="form-control" required="true"/>
+                                            <h:message for="unitStock" id="unitStock_m" class="errorMessage"/>
+                                            <h:inputFile id="imgFileProduct" class="form-control" value="#{productMB.file}" onchange="readProductURL(this, '../resources/#{productMB.product.productImageURL}');" required="#{productMB.requiredImage}" style="visibility: hidden"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Image</label>
+                                            <div class="photoGroup">
+                                                <img src="../resources/#{productMB.product.productImageURL}" id="photoPreviewProduct" height="100" alt="alt"/>
+                                                <input type="button" value="Choose" class="btn btn-secondary" onclick="ChangeImageProduct();" /> <br/>
+                                                <h:message for="imgFileProduct" id="imgFileProduct_m" class="errorMessage"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Description</label>
+                                            <h:inputTextarea id="productDescriptionEditor" class="form-control" required="true"/>
+                                            <h:inputHidden id="productDescription" value="#{productMB.product.productDescription}"/>
+                                            <h:message for="productDescriptionEditor" id="productDescription_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="panel-footer">
+                                <h:commandLink value="Save" type="submit" class="btn btn-primary" onclick="SetDescription();" action="#{productMB.saveProduct()}">
+                                    <f:ajax execute="@form" render="proName_m unitPrice_m unitStock_m imgFileProduct_m productDescription_m" />
+                                </h:commandLink>
+                            </footer>
+                        </section>
+                    </h:form>
+                </section>
+
+                <!-- Specific Page Vendor CSS -->
+                <h:outputStylesheet name="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+                <!-- Specific Page Vendor -->
+                <h:outputScript name="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.default.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.row.with.details.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.tabletools.js" target="head"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

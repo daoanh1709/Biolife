@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./templates/biolifeTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{loginMB.checkLogin()}"/>
+    </f:metadata>
+    <ui:define name="content">
+        <!--Hero Section-->
+        <div class="hero-section hero-background">
+            <h1 class="page-title">My Orders</h1>
+        </div>
+
+        <!--Navigation section-->
+        <div class="container">
+            <nav class="biolife-nav">
+                <ul>
+                    <li class="nav-item"><a href="index.php" class="permal-link">Home</a></li>
+                    <li class="nav-item"><span class="current-page">My orders</span></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="container my-account">
+            <div class="row">
+                <div class="col-lg-3 col-md-3" id="left-side">
+                    <div style="display: flex; align-items: center; border-bottom: 2px solid #e8e8e8; padding-bottom: 10px">
+                        <div style="overflow: hidden; width: 50px; height: 50px; border-radius: 50%;" id="acountImage">
+                            <h:graphicImage name="#{loginMB.user.customerImageURL}" alt=""/>
+                        </div>
+                        <div style="font-weight: bold">
+                            &nbsp;&nbsp;&nbsp; 
+                            #{loginMB.user.customerName}
+                        </div>
+                    </div>
+                    <ul class="nav flex-column" style="padding-top: 20px">
+                        <li class="nav-item"><a href="" class="nav-link #{view.viewId == '/myorders.xhtml' ? 'active' : ''}"><i class="fa fa-shopping-basket" aria-hidden="true" style="font-size: large"></i>&nbsp;&nbsp;&nbsp; My Orders</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-9 col-md-9" id="right-side">
+                    <div class="content" id="info">
+                        <div class="content-header"><h1>My Orders</h1></div>
+                        <div class="content-body" style="padding-top: 0px;">
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"  id="myorders">
+                                <table class="table table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Order no</th>
+                                            <th>Order date</th>
+                                            <th>Total price</th>
+                                            <th>Status</th>
+                                            <th>Details</th>
+                                            <th style="display: none;">Hidden</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="#{orderMB.showCustomerOrders(loginMB.user.customerID)}" var="itemO">
+                                            <tr>
+                                                <td>
+                                                    <h:outputText value="#{itemO.orderID}"/>
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{itemO.orderDate}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+                                                    </h:outputText>
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{orderMB.calculateTotalAmount(itemO.orderID)}">
+                                                        <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                </td>
+                                                <td>
+                                                    <h:outputText id="#{itemO.orderID}" value="#{itemO.statusID.statusDescription}" class="badge badge#{itemO.statusID.statusID}"/>
+                                                </td>
+                                                <td>
+                                                    <h:form style="margin-bottom: 0px;">
+                                                        <h:commandLink action="#{orderMB.viewOrder(itemO.orderID)}" onclick="viewOrder();">
+                                                            <f:ajax render="updateViewOrder orderItems"/>
+                                                            <i class="fa fa-list"></i>
+                                                        </h:commandLink>
+                                                    </h:form>
+                                                    <button id="view-order" data-toggle="modal" data-target="#viewOrder" class="view" style="display: none; border: none; background-color: unset"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                                </td>
+                                                <td style="display: none;">
+                                                    <h:outputText value="#{itemO.statusID.statusID}" id="id#{itemO.orderID}"/>
+                                                </td>
+                                                <td>
+                                                    <h:form style="margin-bottom: 0px;">
+                                                        <h:commandLink id="btnReceive#{itemO.orderID}" action="#{orderMB.receiveOrder(itemO.orderID)}" disabled="#{itemO.statusID.statusID == 2 ? 'false' : 'true'}">
+                                                            <f:ajax listener="#{orderMB.view()}" render="#{itemO.orderID} btnReceive#{itemO.orderID} id#{itemO.orderID}"/>
+                                                            <i class="fa fa-get-pocket"></i>
+                                                        </h:commandLink>
+                                                    </h:form>
+                                                </td>
+                                                <td>
+                                                    <h:form style="margin-bottom: 0px;">
+                                                        <h:commandLink id="btn#{itemO.orderID}" action="#{orderMB.cancelOrder(itemO.orderID)}" disabled="#{itemO.statusID.statusID == 0 ? 'false' : 'true'}">
+                                                            <f:ajax listener="#{orderMB.view()}" render="#{itemO.orderID} btn#{itemO.orderID} id#{itemO.orderID}"/>
+                                                            <i class="fa fa-trash"></i>
+                                                        </h:commandLink>
+                                                    </h:form>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- The Add Modal -->
+        <div class="modal fade" id="viewOrder">
+            <div class = "modal-dialog modal-lg">
+                <div class = "modal-content">
+                    <!--Modal Header-->
+                    <div class = "modal-header">
+                        <h4 class = "modal-title" style="font-weight: bold">Order Details</h4>
+                    </div>
+                    <!--Modal body-->
+                    <div class = "modal-body" style="padding-top: 0px">
+                        <h:panelGroup id="updateViewOrder">
+                            <div class="order-summary sm-margin-bottom-80px" style="background-color: #fff; padding-top: 0px">
+                                <div class="cart-list-box short-type">
+                                    <div class="col-xs-6" style="margin-top: 20px;">
+                                        <b class="stt-name" style="display: inline-block; font-size: 14px; line-height: 30px; color: #222222; font-weight: 700; text-transform: uppercase">Delivery Address</b>
+                                        <p class="txt-desc"><span id="nameAddress"><h:outputText value="#{orderMB.order.addressID.addressName}"/></span></p>
+                                        <p class="txt-desc"><span id="phoneAddress"><h:outputText value="#{orderMB.order.addressID.addressPhone}"/></span></p>
+                                        <p class="txt-desc"><span id="addressAdd"><h:outputText value="#{orderMB.order.addressID.addressDetail}"/></span></p>
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 20px;">
+                                        <b class="stt-name" style="display: inline-block; font-size: 14px; line-height: 30px; color: #222222; font-weight: 700; text-transform: uppercase">Payment Type</b>
+                                        <p class="txt-desc"><span id="paymentType"><h:outputText value="#{orderMB.order.orderPaymentType}"/></span></p>
+                                    </div>
+                                    <div class="col-xs-12" style="margin-top: 20px;">
+                                        <b class="stt-name" style="display: inline-block; font-size: 14px; line-height: 30px; color: #222222; font-weight: 700; text-transform: uppercase">Order items</b>
+                                        <ul class="cart-list" style="border-top: none;border-bottom: none;margin-top: 20px;">
+                                            <h:panelGroup id="orderItems">
+                                                <c:forEach items="#{orderMB.listOrderDetail(orderMB.order.orderID)}" var="itemOD">
+                                                    <li class="cart-elem">
+                                                        <div class="cart-item">
+                                                            <div class="product-thumb">
+                                                                <a class="prd-thumb" href="">
+                                                                    <figure>
+                                                                        <h:graphicImage name="#{orderMB.findProductImg(itemOD.orderDetailsPK.productID)}" width="80" height="80" alt="shop-cart"/>
+                                                                    </figure>
+                                                                </a>
+                                                            </div>
+                                                            <div class="info" style="padding-top: 0px">
+                                                                <span class="txt-quantity"><h:outputText value="#{itemOD.quantity}"/>x</span>
+                                                                <a href="" class="pr-name"><h:outputText value="#{orderMB.findProductName(itemOD.orderDetailsPK.productID)}"/></a>
+                                                            </div>
+                                                            <div class="price price-contain">
+                                                                <c:choose>
+                                                                    <c:when test="#{itemOD.discount == 0}">
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{itemOD.unitPrice}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <ins>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{itemOD.unitPrice * (1 - itemOD.discount)}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </ins>
+                                                                        <del>
+                                                                            <span class="price-amount">
+                                                                                <h:outputText value="#{itemOD.unitPrice}">
+                                                                                    <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                                                </h:outputText>
+                                                                            </span>
+                                                                        </del>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </c:forEach>
+                                            </h:panelGroup>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 subtotal-line subtotal-element" style="float: none;">
+                                        <b class="stt-name">Subtotal</b>
+                                        <span class="stt-price">
+                                            <h:outputText value="#{orderMB.calculateTotalAmount(orderMB.order.orderID)}">
+                                                <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

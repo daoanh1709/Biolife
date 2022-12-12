@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../templates/adminTemplate.xhtml">
+            <ui:define name="content">       
+                <section role="main" class="content-body">
+                    <header class="page-header">
+                        <h2>Categories</h2>
+                        <div class="right-wrapper pull-right">
+                            <ol class="breadcrumbs">
+                                <li>
+                                    <a href="dashboard.xhtml">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li><span>Categories</span></li>
+                            </ol>
+                            <a class="sidebar-right-toggle"></a>
+                        </div>
+                    </header>
+
+                    <h:form style="padding-bottom: 15px">
+                        <h:commandLink value="Back" class="btn btn-danger" action="#{categoriesMB.backView()}"/>
+                    </h:form>
+                    <h:form id="categoryForm" prependId="false" enctype="multipart/form-data">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <h2 class="panel-title">#{categoriesMB.formTitle}</h2>
+                            </header>
+                            <div class="panel-body formCateHeight">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">ID</label>
+                                            <h:inputText id="cateID" value="#{categoriesMB.categories.categoryID}" class="form-control" readonly="true"/>
+                                            <h:message for="cateID" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Name</label>
+                                            <h:inputText id="cateIName" value="#{categoriesMB.categories.categoryName}" class="form-control" required="true"/>
+                                            <h:message for="cateIName" id="cateName_m" class="errorMessage"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Description</label>
+                                            <h:inputText id="cateDescription" value="#{categoriesMB.categories.categoryDescription}" class="form-control" required="true"/>
+                                            <h:message for="cateDescription" id="cateDescription_m" class="errorMessage"/>
+                                            <!--<c:set var="imgPath" value="../resources/#{categoriesMB.categories.categoryImageURL}"/>-->
+                                            <h:inputFile id="imgFile" class="form-control" value="#{categoriesMB.file}" onchange="readURL(this, '../resources/#{categoriesMB.categories.categoryImageURL}');" required="#{categoriesMB.requiredImage}" style="visibility: hidden"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Image</label>
+                                            <div>
+                                                <img src="../resources/#{categoriesMB.categories.categoryImageURL}" id="photoPreview" height="100" alt="alt"/>
+                                                <input type="button" value="Choose" class="btn btn-secondary" onclick="ChangeImage();" /> <br/>
+                                                <h:message for="imgFile" id="imgFile_m" class="errorMessage"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <footer class="panel-footer">
+                                <h:commandLink value="Save" type="submit" class="btn btn-primary" action="#{categoriesMB.saveCategory()}">
+                                    <f:ajax execute="@form" render="cateName_m cateDescription_m imgFile_m" />
+                                </h:commandLink>
+                                <!--<button class="btn btn-primary">Submit Card</button>-->
+                            </footer>
+                        </section>
+                    </h:form>
+                </section>
+
+                <!-- Specific Page Vendor CSS -->
+                <h:outputStylesheet name="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css"/>
+
+                <!-- Specific Page Vendor -->
+                <h:outputScript name="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js" target="head"/>
+                <h:outputScript name="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.default.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.row.with.details.js" target="head"/>
+                <h:outputScript name="assets/javascripts/tables/examples.datatables.tabletools.js" target="head"/>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

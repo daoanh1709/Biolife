@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../templates/adminTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <ui:define name="content">
+        <!-- start: page -->
+
+        <section role="main" class="content-body">
+            <header class="page-header">
+                <h2>Dashboard</h2>
+
+                <div class="right-wrapper pull-right">
+                    <ol class="breadcrumbs">
+                        <li>
+                            <a href="dashboard.xhtml">
+                                <i class="fa fa-home"></i>
+                            </a>
+                        </li>
+                        <li><span>Dashboard</span></li>
+                    </ol>
+                    <a class="sidebar-right-toggle"></a>
+                </div>
+            </header>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-12 col-xl-6">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-4 col-xl-4">
+                            <section class="panel panel-featured-left panel-featured-tertiary">
+                                <div class="panel-body">
+                                    <div class="widget-summary">
+                                        <div class="widget-summary-col widget-summary-col-icon">
+                                            <div class="summary-icon bg-tertiary">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </div>
+                                        </div>
+                                        <div class="widget-summary-col">
+                                            <div class="summary">
+                                                <h4 class="title">Today's Orders</h4>
+                                                <div class="info">
+                                                    <strong class="amount">#{orderMB.countTodayOrders()}</strong>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-12 col-lg-4 col-xl-4">
+                            <section class="panel panel-featured-left panel-featured-secondary">
+                                <div class="panel-body">
+                                    <div class="widget-summary">
+                                        <div class="widget-summary-col widget-summary-col-icon">
+                                            <div class="summary-icon bg-secondary">
+                                                <i class="fa fa-usd"></i>
+                                            </div>
+                                        </div>
+                                        <div class="widget-summary-col">
+                                            <div class="summary">
+                                                <h4 class="title">Today's Profit</h4>
+                                                <div class="info">
+                                                    <strong class="amount">
+                                                        <h:outputText value="#{orderMB.calculateTodayProfit()}">
+                                                            <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                        </h:outputText>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-12 col-lg-4 col-xl-4">
+                            <section class="panel panel-featured-left panel-featured-primary">
+                                <div class="panel-body">
+                                    <div class="widget-summary">
+                                        <div class="widget-summary-col widget-summary-col-icon">
+                                            <div class="summary-icon bg-primary">
+                                                <i class="fa fa-star-half-empty"></i>
+                                            </div>
+                                        </div>
+                                        <div class="widget-summary-col">
+                                            <div class="summary">
+                                                <h4 class="title">Total Profit</h4>
+                                                <div class="info">
+                                                    <strong class="amount">
+                                                        <h:outputText value="#{orderMB.calculateTotalProfit()}">
+                                                            <f:convertNumber locale="en_US" currencySymbol="$" type="currency"/>
+                                                        </h:outputText>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-down"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+
+                            <h2 class="panel-title">Orders By Month</h2>
+                        </header>
+                        <div class="panel-body">
+                            <p:barChart model="#{orderMB.barModel}"/>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-down"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+                            <h2 class="panel-title">Profit By Month</h2>
+                        </header>
+                        <div class="panel-body">
+                            <p:lineChart model="#{orderMB.lineModel}"/>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- end: page -->
+        </section>
+
+        <!-- Specific Page Vendor CSS -->
+        <h:outputStylesheet name="assets/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css"/>
+        <h:outputStylesheet name="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css"/>
+        <h:outputStylesheet name="assets/vendor/morris/morris.css"/>
+
+        <!-- Specific Page Vendor -->
+        <h:outputScript name="assets/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js" target="head"/>
+        <h:outputScript name="assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js" target="head"/>
+        <h:outputScript name="assets/vendor/jquery-appear/jquery.appear.js" target="head"/>
+        <h:outputScript name="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js" target="head"/>
+    </ui:define>
+
+</ui:composition>

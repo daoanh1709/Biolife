@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Facelets Template</title>
+        
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{employeeMB.checkLogin()}"/>
+        </f:metadata>
+
+        <!-- Mobile Metas -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+        <!-- Web Fonts  -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css"/>
+
+        <!-- Vendor CSS -->
+        <h:outputStylesheet name="assets/vendor/bootstrap/css/bootstrap.css"/>
+        <h:outputStylesheet name="assets/vendor/font-awesome/css/font-awesome.css"/>
+        <h:outputStylesheet name="assets/vendor/magnific-popup/magnific-popup.css"/>
+        <h:outputStylesheet name="assets/vendor/bootstrap-datepicker/css/datepicker3.css"/>
+
+
+        <h:outputStylesheet name="assets/vendor/select2/select2.css"/>
+
+        <!-- Theme CSS -->
+        <h:outputStylesheet name="assets/stylesheets/theme.css"/>
+
+        <!-- Skin CSS -->
+        <h:outputStylesheet name="assets/stylesheets/skins/default.css"/>
+
+        <!-- Theme Custom CSS -->
+        <h:outputStylesheet name="assets/stylesheets/theme-custom.css"/>
+
+        <!-- Vendor -->
+        <h:outputScript name="assets/vendor/modernizr/modernizr.js" target="head"/>
+        <h:outputScript name="assets/vendor/jquery/jquery.js" target="head"/>
+        <h:outputScript name="assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js" target="head"/>
+        <h:outputScript name="assets/vendor/bootstrap/js/bootstrap.js" target="head"/>
+        <h:outputScript name="assets/vendor/nanoscroller/nanoscroller.js" target="head"/>
+        <h:outputScript name="assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js" target="head"/>
+        <h:outputScript name="assets/vendor/magnific-popup/magnific-popup.js" target="head"/>
+        <h:outputScript name="assets/vendor/jquery-placeholder/jquery.placeholder.js" target="head"/>
+        <script src="https://cdn.ckeditor.com/4.20.0/standard/ckeditor.js"></script>
+
+        <!-- Head Libs -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    </h:head>
+
+    <h:body>
+        <section class="body">
+            <div id="top" class="top">
+                <ui:insert name="top">
+                    <!-- start: header -->
+                    <header class="header">
+                        <div class="logo-container">
+                            <a href="../" class="logo">
+                                <h:graphicImage name="images/organic-3-green.png" alt="Biolife Admin" height="35"/>
+                            </a>
+                            <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+                                <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                            </div>
+                        </div>
+
+                        <!-- start: search & user box -->
+                        <div class="header-right">
+
+                            <span class="separator"></span>
+
+                            <div id="userbox" class="userbox">
+                                <a href="#" data-toggle="dropdown">
+                                    <figure class="profile-picture">
+                                        <h:graphicImage name="#{employeeMB.imageURL}" alt="Joseph Doe" class="img-circle"/>
+                                    </figure>
+                                    <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com">
+                                        <span class="name"><h:outputText value="#{employeeMB.name}"/></span>
+                                        <span class="role">Administrator</span>
+                                    </div>
+                                    <i class="fa custom-caret"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <ul class="list-unstyled">
+                                        <li class="divider"></li>
+                                        <li>
+                                            <h:form>
+                                                <h:commandLink role="menuitem" tabindex="-1" action="#{employeeMB.logout()}">
+                                                <i class="fa fa-power-off"></i> Logout
+                                                </h:commandLink>
+                                            </h:form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end: search & user box -->
+                    </header>
+                    <!-- end: header -->
+                </ui:insert>
+            </div>
+            <div>
+                <div class="inner-wrapper">
+                    <ui:insert name="left">
+                        <!-- start: sidebar -->
+                        <aside id="sidebar-left" class="sidebar-left">
+                            <div class="sidebar-header">
+                                <div class="sidebar-title">
+                                    Navigation
+                                </div>
+                                <div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
+                                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                                </div>
+                            </div>
+
+                            <div class="nano">
+                                <div class="nano-content">
+                                    <nav id="menu" class="nav-main" role="navigation">
+                                        <ul class="nav nav-main">
+                                            <li class="#{view.viewId == '/admin/dashboard.xhtml' ? 'nav-active' : 'nav'}">
+                                                <h:link outcome="dashboard">
+                                                    <i class="fa fa-home" aria-hidden="true"></i>
+                                                    <span>Dashboard</span>
+                                                </h:link>
+                                            </li>
+                                            <li class="#{view.viewId == '/admin/orders.xhtml' ? 'nav-active' : 'nav'}">
+                                                <h:link outcome="orders">
+                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                    <span>Orders</span>
+                                                </h:link>
+                                            </li>
+                                            <li class="#{view.viewId == '/admin/categories.xhtml' || view.viewId == '/admin/categoriesManage.xhtml' ? 'nav-active' : 'nav'}">
+                                                <a href="categories.xhtml">
+                                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                                    <span>Categories</span>
+                                                </a>
+                                            </li>
+                                            <li class="nav-parent #{view.viewId == '/admin/products.xhtml' || view.viewId == '/admin/productManage.xhtml' || view.viewId == '/admin/productFeatured.xhtml' ? 'nav-active' : ''}">
+                                                <a>
+                                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                                    <span>Products</span>
+                                                </a>
+                                                <ul class="nav nav-children">
+                                                    <li>
+                                                        <a href="products.xhtml">
+                                                            All Products
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="productFeatured.xhtml">
+                                                            Featured Products
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="#{view.viewId == '/admin/deals.xhtml' || view.viewId == '/admin/dealManage.xhtml' ? 'nav-active' : 'nav'}">
+                                                <a href="deals.xhtml">
+                                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                                    <span>Deals</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                            </div>
+
+                        </aside>
+                        <!-- end: sidebar -->
+                    </ui:insert>
+                    <!--<div id="content" class="left_content">-->
+                    <ui:insert name="content">Content</ui:insert>
+                    <!--</div>-->
+                </div>
+            </div>
+        </section>
+    </h:body>
+
+
+    <h:outputScript name="assets/vendor/select2/select2.js"/>
+
+    <!-- Theme Base, Components and Settings -->
+    <h:outputScript name="assets/javascripts/theme.js"/>
+
+    <!-- Theme Custom -->
+    <h:outputScript name="assets/javascripts/theme.custom.js"/>
+
+    <!-- Theme Initialization Files -->
+    <h:outputScript name="assets/javascripts/theme.init.js"/>
+
+
+    <!-- Examples -->
+    <!--<h:outputScript name="assets/javascripts/dashboard/examples.dashboard.js"/>-->
+</html>
